@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# this script deploys the osm wms service
+# based on basemaps,imposm3,mapproxy.
+# be sure to mv and edit 
+# deploys mapproxy in a virtualenv
+
+# provides env file path
+if [ -f "$1" ];
+  then
+     source "$1"
+  else
+     echo "env not found or not specified"
+     echo "usage : install ./env_production|./env_whatever"
+  exit 0
+fi
+
+# deploy mapproxy
+cd $BASE_DIR
+if [ ! -d mapproxy ]; then
+  virtualenv mapproxy
+  source mapproxy/bin/activate
+  pip install mapproxy
+fi
+
+# maipproxy cache lies besides conf file, symlinking to global cache directory
+ln -sf $BASE_DIR/cache/mapproxy $BASE_DIR/etc/cache_data
+
+
+# build mapfiles
+cd $BASE_DIR/basemaps
+cp $BASE_DIR/etc/basemaps_style.py generate_style.py
+make clean
+for STYLE in google-generalized bing-generalized default-generalized michelin-generalized;
+do
+  make STYLE=$STYLE \
+    OSM_PREFIX="osm_" \
+    OSM_NAME_COLUMN="name" \
+    OSM_DB_CONNECTION="host=$DBHOST dbname=$DBNAME user=$DBUSER password=$DBPASS port=$DBPORT" \
+    OSM_SRID="3857" \
+    OSM_UNITS="meters" \
+    OSM_EXTENT="-20026376.39 -20048966.10 20026376.39 20048966.10" \
+    OSM_WMS_SRS="EPSG:2154 EPSG:3948 EPSG:3857 EPSG:4326"
+done
+
+

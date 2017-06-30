@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# provides env file path
+echo $1
+if [ -f "$1" ];
+  then
+     source "$1"
+  else
+     echo "env not found or not specified"
+  exit 0
+fi
+
+./mapproxy/bin/mapproxy-util serve-develop $BASE_DIR/etc/mapproxy.yaml --bind "$MAPPROXY_BIND"
+

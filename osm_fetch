@@ -1,0 +1,17 @@
+#!/bin/sh
+
+
+set -e 
+
+# provides env file path
+echo $1
+if [ -f "$1" ];
+  then
+     source "$1"
+  else
+     echo "env not found or not specified"
+  exit 0
+fi
+
+cd $BASE_DIR/cache/pbf
+grep -v "^#" $BASE_DIR/etc/pbf.list |xargs -n 1 curl -LO

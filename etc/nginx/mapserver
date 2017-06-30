@@ -1,0 +1,67 @@
+# /etc/nginx/sites-available/mapserver
+# mapserver cgi wrappers
+server {
+    listen       127.0.0.1:80;
+    server_name  localhost;
+
+    access_log /var/log/nginx/mapserver-access.log;
+    error_log  /var/log/nginx/mapserver-error.log;
+
+    location / {
+      root /var/www/html;
+    }
+
+    # osm2pgsql database for scales < 75K, continuously updated
+    #location /osm2pgsql/default {
+    #  fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-defaultosm2pgsql.map;
+    #  include includes/mapserver_fcgi_params;
+    #}
+    #location /osm2pgsql/bing {
+    #  fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-bingosm2pgsql.map;
+    #  include includes/mapserver_fcgi_params;
+    #}
+    #location /osm2pgsql/google {
+    #  fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-googleosm2pgsql.map;
+    #  include includes/mapserver_fcgi_params;
+    #}
+    #location /osm2pgsql/michelin {
+    #  fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-michelinosm2pgsql.map;
+    #  include includes/mapserver_fcgi_params;
+    #}
+
+    # imposmi2 database for scales > 75K
+    location /imposm/default {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-default.map;
+      include includes/mapserver_fcgi_params;
+    }
+    location /imposm/bing {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-bing.map;
+      include includes/mapserver_fcgi_params;
+    }
+    location /imposm/google {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-google.map;
+      include includes/mapserver_fcgi_params;
+    }
+    location /imposm/michelin {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-michelin.map;
+      include includes/mapserver_fcgi_params;
+    }
+
+    # imposm3 database
+    location /osm/default {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-default-generalized.map;
+      include includes/mapserver_fcgi_params;
+    }
+    location /osm/bing {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-bing-generalized.map;
+      include includes/mapserver_fcgi_params;
+    }
+    location /osm/google {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-google-generalized.map;
+      include includes/mapserver_fcgi_params;
+    }
+    location /osm/michelin {
+      fastcgi_param MS_MAPFILE /home/openstreetmap/basemaps/osm-michelin-generalized.map;
+      include includes/mapserver_fcgi_params;
+    }
+}

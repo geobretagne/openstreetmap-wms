@@ -1,0 +1,11 @@
+*.pbf
+*.log
+env_*
+/mapproxy
+/etc/cache_data
+/cache/imposm/coords/*
+/cache/imposm/inserted_ways/*
+/cache/imposm/nodes/*
+/cache/imposm/relations/*
+/cache/imposm/ways/*
+/cache/mapproxy/*

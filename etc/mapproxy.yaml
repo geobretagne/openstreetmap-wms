@@ -1,0 +1,242 @@
+services:
+  demo:
+  tms:
+  kml:
+  wmts:
+  wms:
+    attribution:
+    md:
+      title: GeoBretagne Tile Proxy
+      abstract: GeoBretagne Tile Proxy for raster covers and maps
+      online_resource: http://cms.geobretagne.fr/
+      contact:
+        person: GeoBretagne team
+        position: network service administrator
+        organization: GeoBretagne
+        address: 10 rue Maurice Fabre
+        city: RENNES
+        postcode: 35065
+        country: France
+        phone: +33(0)299334556
+        fax: +33(0)299334556
+        email: administrator@geobretagne.fr
+      access_constraints: None
+      fees: None
+    srs: ['EPSG:4326','EPSG:2154','EPSG:3857','EPSG:900913']
+    image_formats: ['image/png']
+    on_source_errors: raise
+    max_output_pixels: [4000, 4000]
+    versions: ['1.1.1','1.3.0']
+
+layers:
+  # OpenStreetMap google
+  - name:    osm:google
+    title:   OpenStreetMap carte style "google"
+    sources: [cache-google]
+    md:
+      abstract:       carte réalisée à partir de la base OpenStreetMap avec un style google.
+      keyword_list:
+        - vocabulary: ISO
+          keywords:   [Usage des sols]
+      attribution:
+        title:        (c) données contributeurs OpenStreetMap, tuiles GéoBretagne
+        url:          http://cms.geobretagne.fr/
+      metadata:
+       - url:         http://geobretagne.fr/geonetwork/srv/fre/xml_iso19139?uuid=6d5e8af2-070e-45ab-96c0-fe7938a5d853
+         type:        ISO19115:2003
+         format:      application/xml
+
+  # OpenStreetMap bing
+  - name:    osm:bing
+    title:   OpenStreetMap carte style "bing"
+    sources: [cache-bing]
+    md:
+      abstract:       carte réalisée à partir de la base OpenStreetMap avec un style bing.
+      keyword_list:
+        - vocabulary: ISO
+          keywords:   [Usage des sols]
+      attribution:
+        title:        (c) données contributeurs OpenStreetMap, tuiles GéoBretagne
+        url:          http://cms.geobretagne.fr/
+      metadata:
+       - url:         http://geobretagne.fr/geonetwork/srv/fre/xml_iso19139?uuid=cd931771-fb8f-46d8-bd73-8f7fbbd356d8
+         type:        ISO19115:2003
+         format:      application/xml
+
+  # OpenStreetMap default
+  - name:    osm:default
+    title:   OpenStreetMap carte style "simple"
+    sources: [cache-default]
+    md:
+      abstract:       carte réalisée à partir de la base OpenStreetMap avec un style simple.
+      keyword_list:
+        - vocabulary: ISO
+          keywords:   [Usage des sols]
+      attribution:
+        title:        (c) données contributeurs OpenStreetMap, tuiles GéoBretagne
+        url:          http://cms.geobretagne.fr/
+      metadata:
+       - url:         http://geobretagne.fr/geonetwork/srv/fre/xml_iso19139?uuid=9b9db6b2-8dec-4aa2-abef-8f627267cc64
+         type:        ISO19115:2003
+         format:      application/xml
+
+  # OpenStreetMap default high quality
+  - name:    osm:hq
+    title:   OpenStreetMap carte style "HQ"
+    sources: [cache-hq]
+    md:
+      abstract:       carte réalisée à partir de la base OpenStreetMap avec un style simple haute qualité.
+      keyword_list:
+        - vocabulary: ISO
+          keywords:   [Usage des sols]
+      attribution:
+        title:        (c) données contributeurs OpenStreetMap, tuiles GéoBretagne
+        url:          http://cms.geobretagne.fr/
+      metadata:
+       - url:         http://geobretagne.fr/geonetwork/srv/fre/xml_iso19139?uuid=9b9db6b2-8dec-4aa2-abef-8f627267cc64
+         type:        ISO19115:2003
+         format:      application/xml
+
+
+  # OpenStreetMap roads
+  - name:    osm:roads
+    title:   OpenStreetMap carte style "transparent"
+    sources: [cache-roads]
+    md:
+      abstract:       carte réalisée à partir de la base OpenStreetMap avec un style transparent.
+      keyword_list:
+        - vocabulary: ISO
+          keywords:   [Usage des sols]
+      attribution:
+        title:        (c) données contributeurs OpenStreetMap, tuiles GéoBretagne
+        url:          http://cms.geobretagne.fr/
+      metadata:
+       - url:         http://geobretagne.fr/geonetwork/srv/fre/xml_iso19139?uuid=3303a14b-44af-4950-b067-f43ddc0f483f
+         type:        ISO19115:2003
+         format:      application/xml
+
+sources:
+  # osm google
+  osm-google:
+    type: wms
+    wms_opts:
+      featureinfo: true
+    req:
+      url: http://localhost:80/osm/google?
+      layers: default
+      transparent: false
+    coverage:
+      bbox: [-20026376.39,-20048966.10,20026376.39,20048966.10]
+      srs: 'EPSG:3857'
+    supported_formats: ['image/png']
+    concurrent_requests: 4
+
+  # osm bing
+  osm-bing:
+    type: wms
+    wms_opts:
+      featureinfo: false
+    req:
+      url: http://localhost:80/osm/bing?
+      layers: default
+      transparent: false
+    coverage:
+      bbox: [-20026376.39,-20048966.10,20026376.39,20048966.10]
+      srs: 'EPSG:3857'
+    supported_formats: ['image/png']
+    concurrent_requests: 4
+
+  # osm default
+  osm-default:
+    type: wms
+    wms_opts:
+      featureinfo: false
+    req:
+      url: http://localhost:80/osm/default?
+      layers: default
+      transparent: transparent
+    coverage:
+      bbox: [-20026376.39,-20048966.10,20026376.39,20048966.10]
+      srs: 'EPSG:3857'
+    supported_formats: ['image/png']
+    concurrent_requests: 4
+
+  # osm roads
+  osm-roads:
+    type: wms
+    wms_opts:
+      featureinfo: false
+    req:
+      url: http://localhost:80/osm/google?
+      layers: borders0,places0,borders1,places1,borders2,places2,borders3,places3,borders4,places4,roads5,borders5,places5,roads6,borders6,places6,roads7,borders7,places7,railways8,roads8,borders8,places8,railways9,roads9,borders9,places9,railways10,roads10,aeroways10,borders10,places10,railways11,roads11,aeroways11,borders11,places11,railways12,roads12,aeroways12,borders12,places12,railways13,roads13,aeroways13,borders13,places13,railways14,roads14,aeroways14,borders14,places14,railways15,roads15,aeroways15,borders15,places15,railways16,roads16,aeroways16,borders16,places16,railways17,roads17,aeroways17,borders17,places17,railways18,roads18,aeroways18,borders18,places18
+      transparent: true
+    coverage:
+      bbox: [-20026376.39,-20048966.10,20026376.39,20048966.10]
+      srs: 'EPSG:3857'
+    supported_formats: ['image/png']
+    concurrent_requests: 48
+
+grids:
+  webmercator_hq:
+    srs: "EPSG:3857"
+    min_res: 78271.51696402048
+    tile_size: [512, 512]
+    num_levels: 24
+
+  epsg_2154_nw:
+    srs: "EPSG:2154"
+    origin: nw
+    bbox: [-357823.2365,6037008.6939,1313632.3628,7230727.3772]
+    bbox_srs: "EPSG:2154"
+    num_levels: 24
+
+
+caches:
+  cache-google:
+   sources: [osm-google]
+   grids: [GLOBAL_WEBMERCATOR, epsg_2154_nw]
+   cache:
+    type: file
+
+  cache-bing:
+   sources: [osm-bing]
+   grids: [GLOBAL_WEBMERCATOR, epsg_2154_nw]
+   cache:
+    type: file
+
+  cache-michelin:
+   sources: [osm-michelin]
+   grids: [GLOBAL_WEBMERCATOR, epsg_2154_nw]
+   cache:
+    type: file
+
+  cache-default:
+   sources: [osm-default]
+   grids: [GLOBAL_WEBMERCATOR, epsg_2154_nw]
+   cache:
+     type: file
+
+  cache-roads:
+   sources: [osm-roads]
+   grids: [GLOBAL_WEBMERCATOR, epsg_2154_nw]
+   cache:
+     type: file
+
+  cache-hq:
+   sources: [osm-default]
+   grids: [webmercator_hq, epsg_2154_nw]
+   cache:
+     type: file
+
+globals:
+  image:
+    resampling_method: bicubic
+    formats:
+      image/jpeg:
+        encoding_options:
+          jpeg_quality: 80
+  cache:
+    meta_size: [2,2]
+    meta_buffer: 0
+
+

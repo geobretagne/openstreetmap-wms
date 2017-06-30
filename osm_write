@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e 
+
+# provides env file path
+echo $1
+if [ -f "$1" ];
+  then
+     source "$1"
+  else
+     echo "env not found or not specified"
+  exit 0
+fi
+
+#
+
+PBF_DIR="$BASE_DIR/cache/pbf"
+MAPPING="$BASE_DIR/basemaps/imposm3-mapping.json"
+CACHE_DIR="$BASE_DIR/cache/imposm"
+CONNECTION=postgis://$DBUSER:$DBPASS@$DBHOST:$DBPORT/$DBNAME
+echo $CONNECTION
+
+# empty cache with first pbf, then append
+FIRST=1
+for pbf in $PBF_DIR/*.pbf; do
+   if [ $FIRST -eq 1 ];
+     then
+       ionice -c3 ./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -overwritecache -read $pbf
+       FIRST=0
+     else
+       ionice -c3 ./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -overwritecache -read $pbf
+     fi
+done
+
+ionice -c3 ./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -write 
+
+# ionice not effective against postgis
+./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -optimize
+./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -deployproduction
+
+
