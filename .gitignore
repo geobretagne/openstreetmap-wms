@@ -1,6 +1,7 @@
 *.pbf
 *.log
 env_*
+sample.png
 /mapproxy
 /etc/cache_data
 /cache/imposm/coords/*

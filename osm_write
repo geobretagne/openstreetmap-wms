@@ -28,7 +28,7 @@ for pbf in $PBF_DIR/*.pbf; do
        ionice -c3 ./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -overwritecache -read $pbf
        FIRST=0
      else
-       ionice -c3 ./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -overwritecache -read $pbf
+       ionice -c3 ./imposm3/imposm3 import -connection $CONNECTION -mapping $MAPPING -cachedir $CACHE_DIR -appendcache -read $pbf
      fi
 done
 

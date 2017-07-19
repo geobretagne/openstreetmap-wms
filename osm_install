@@ -26,6 +26,9 @@ fi
 # maipproxy cache lies besides conf file, symlinking to global cache directory
 ln -sf $BASE_DIR/cache/mapproxy $BASE_DIR/etc/cache_data
 
+# build support datas
+cd $BASE_DIR/basemaps/data
+make
 
 # build mapfiles
 cd $BASE_DIR/basemaps
