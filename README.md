@@ -29,20 +29,11 @@ aptitude install git cgi-mapserver nginx mapserver-bin fcgiwrap osm2pgsql
 Récupérer le dépôt dans un volume performant (SSD) et gros (>100 Go)
 
 ```
-git clone https://github.com/patin/couffin/osm2wms.git
+git clone https://github.com/geobretagne/openstreetmap-wms.git
+cd openstreetmap-wms
 ```
 
-Préparer la base de données
 
-```
-sudo su postgres
-source env_test
-createuser --no-superuser --no-createrole --createdb $DBUSER
-createdb -E UTF8 -O "$DBUSER" "$DBNAME"
-psql -d $DBNAME -c "CREATE EXTENSION postgis;"
-psql -d $DBNAME -c "CREATE EXTENSION hstore;"
-echo "ALTER USER $DBUSER WITH PASSWORD '$DBPASS';" |psql -d $DBNAME
-```
 
 ## Configuration et build
 
@@ -57,6 +48,18 @@ Par exemple
 cp env.sample env_test
 vi env_test
 ``` 
+
+Préparer la base de données
+
+```
+sudo su postgres
+source env_test
+createuser --no-superuser --no-createrole --createdb $DBUSER
+createdb -E UTF8 -O "$DBUSER" "$DBNAME"
+psql -d $DBNAME -c "CREATE EXTENSION postgis;"
+psql -d $DBNAME -c "CREATE EXTENSION hstore;"
+echo "ALTER USER $DBUSER WITH PASSWORD '$DBPASS';" |psql -d $DBNAME
+```
 
 Le script `̀ `osm_install``` installe et construit basemaps et mapproxy.
 
